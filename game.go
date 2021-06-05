@@ -23,8 +23,8 @@ func (gameHandler *GameHandler) get(id string) (*Game, bool) {
 	return game, found
 }
 
-func (gameHandler *GameHandler) register(id string, game *Game) {
-	gameHandler.gameMap[id] = game
+func (gameHandler *GameHandler) register(game *Game) {
+	gameHandler.gameMap[game.ID] = game
 }
 
 func (gameHandler *GameHandler) delete(id string) {
