@@ -75,3 +75,15 @@ func (game *Game) guess(letter string) {
 		game.RemainingGuesses--
 	}
 }
+
+// loss will return true if the user has no more guesses and there are still
+// letters that have not been guessed.
+func (game *Game) loss() bool {
+	return game.RemainingGuesses < 1 && len(game.IndexByLetter) > 0
+}
+
+// won will return true if the user has guessed each of the letters within the
+// limited number of guesses provided.
+func (game *Game) won() bool {
+	return game.RemainingGuesses >= 0 && len(game.IndexByLetter) == 0
+}
