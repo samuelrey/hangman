@@ -13,14 +13,14 @@ const (
 )
 
 var (
-	gameHandler *GameHandler
+	gameHandler *SimpleGameHandler
 	words       []string
 )
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	gameHandler = newGameHandler()
+	gameHandler = newSimpleGameHandler()
 
 	var err error
 	words, err = loadWords("words.txt")

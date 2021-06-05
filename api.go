@@ -36,7 +36,7 @@ func handleGuess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	game, found := gameHandler.get(guess.ID)
+	game, found := gameHandler.Get(guess.ID)
 	if !found {
 		return
 	}
@@ -45,7 +45,7 @@ func handleGuess(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%+v", game)
 
 	if game.Loss() || game.Won() {
-		gameHandler.delete(game.ID)
+		gameHandler.Delete(game.ID)
 	}
 
 	resp := hangmanResponse{
@@ -73,7 +73,7 @@ func handleNew(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gameHandler.register(game)
+	gameHandler.Register(game)
 
 	resp := hangmanResponse{
 		ID:               game.ID,
