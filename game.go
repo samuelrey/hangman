@@ -35,3 +35,22 @@ func newGame(word string, remainingGuesses int) (*Game, error) {
 		RemainingGuesses: remainingGuesses,
 	}, nil
 }
+
+// guess checks whether the given letter is part of the secret word. If it is,
+// then we replace the underscores with the given letter to display to the user.
+// Otherwise we reduce the number of remaining guesses.
+//
+// Note that if the user guesses a letter correctly then guesses that same
+// letter again, we consider the second guess incorrect.
+func (game *Game) guess(letter string) {
+	if indexes, ok := game.IndexByLetter[letter]; ok {
+		// replace underscores with the correctly guessed letter
+		for _, i := range indexes {
+			game.Current = game.Current[:i] + letter + game.Current[i+1:]
+		}
+
+		delete(game.IndexByLetter, letter)
+	} else {
+		game.RemainingGuesses--
+	}
+}
