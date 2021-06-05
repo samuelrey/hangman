@@ -1,4 +1,4 @@
-package main
+package game
 
 import (
 	"testing"
@@ -9,7 +9,7 @@ import (
 type GameTestSuite struct{ suite.Suite }
 
 func (suite *GameTestSuite) TestNewGame() {
-	game, err := newGame("paradiddle", 6)
+	game, err := NewGame("paradiddle", 6)
 
 	suite.Require().NoError(err)
 	suite.Require().Equal("paradiddle", game.Word)
@@ -29,10 +29,10 @@ func (suite *GameTestSuite) TestNewGame() {
 }
 
 func (suite *GameTestSuite) TestGuessRight() {
-	game, err := newGame("paradiddle", 6)
+	game, err := NewGame("paradiddle", 6)
 	suite.Require().NoError(err)
 
-	game.guess("d")
+	game.Guess("d")
 
 	suite.Require().Equal("____d_dd__", game.Current)
 	suite.Require().Equal(6, game.RemainingGuesses)
@@ -49,10 +49,10 @@ func (suite *GameTestSuite) TestGuessRight() {
 }
 
 func (suite *GameTestSuite) TestGuessWrong() {
-	game, err := newGame("paradiddle", 6)
+	game, err := NewGame("paradiddle", 6)
 	suite.Require().NoError(err)
 
-	game.guess("z")
+	game.Guess("z")
 
 	suite.Require().Equal("__________", game.Current)
 	suite.Require().Equal(5, game.RemainingGuesses)
@@ -72,11 +72,11 @@ func (suite *GameTestSuite) TestGuessWrong() {
 // Test that we reduce the number of remaining guesses if a correct letter is
 // given more than once.
 func (suite *GameTestSuite) TestGuessLetterTwice() {
-	game, err := newGame("paradiddle", 6)
+	game, err := NewGame("paradiddle", 6)
 	suite.Require().NoError(err)
 
-	game.guess("d")
-	game.guess("d")
+	game.Guess("d")
+	game.Guess("d")
 
 	suite.Require().Equal("____d_dd__", game.Current)
 	suite.Require().Equal(5, game.RemainingGuesses)

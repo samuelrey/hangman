@@ -5,13 +5,15 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+
+	"github.com/samuelrey/hangman/game"
 )
 
 func handleNew(w http.ResponseWriter, r *http.Request) {
 	i := rand.Intn(len(words))
 	word := words[i]
 
-	game, err := newGame(word, startGuesses)
+	game, err := game.NewGame(word, startGuesses)
 	if err != nil {
 		log.Println(err)
 		return

@@ -1,4 +1,4 @@
-package main
+package game
 
 import "github.com/pkg/errors"
 
@@ -10,7 +10,7 @@ type Game struct {
 	RemainingGuesses int
 }
 
-func newGame(word string, remainingGuesses int) (*Game, error) {
+func NewGame(word string, remainingGuesses int) (*Game, error) {
 	id, err := generateIdentifier()
 	if err != nil {
 		return nil, errors.Wrap(err, "create new game")
@@ -36,13 +36,13 @@ func newGame(word string, remainingGuesses int) (*Game, error) {
 	}, nil
 }
 
-// guess checks whether the given letter is part of the secret word. If it is,
+// Guess checks whether the given letter is part of the secret word. If it is,
 // then we replace the underscores with the given letter to display to the user.
 // Otherwise we reduce the number of remaining guesses.
 //
 // Note that if the user guesses a letter correctly then guesses that same
 // letter again, we consider the second guess incorrect.
-func (game *Game) guess(letter string) {
+func (game *Game) Guess(letter string) {
 	if indexes, ok := game.IndexByLetter[letter]; ok {
 		// replace underscores with the correctly guessed letter
 		for _, i := range indexes {
@@ -55,14 +55,14 @@ func (game *Game) guess(letter string) {
 	}
 }
 
-// loss will return true if the user has no more guesses and there are still
+// Loss will return true if the user has no more guesses and there are still
 // letters that have not been guessed.
-func (game *Game) loss() bool {
+func (game *Game) Loss() bool {
 	return game.RemainingGuesses < 1 && len(game.IndexByLetter) > 0
 }
 
-// won will return true if the user has guessed each of the letters within the
+// Won will return true if the user has guessed each of the letters within the
 // limited number of guesses provided.
-func (game *Game) won() bool {
+func (game *Game) Won() bool {
 	return game.RemainingGuesses >= 0 && len(game.IndexByLetter) == 0
 }

@@ -1,4 +1,4 @@
-module github.com/fleetdm/hangman
+module github.com/samuelrey/hangman
 
 go 1.16
 

@@ -32,10 +32,10 @@ func handleGuess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	game.guess(guess.Letter)
+	game.Guess(guess.Letter)
 	fmt.Printf("%+v", game)
 
-	if game.loss() || game.won() {
+	if game.Loss() || game.Won() {
 		gameHandler.delete(game.ID)
 	}
 
