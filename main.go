@@ -11,21 +11,16 @@ const (
 	serverAddress = "localhost:1337"
 )
 
-var (
-	gameHandler *SimpleGameHandler
-	words       []string
-)
-
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	gameHandler = newSimpleGameHandler()
-
 	var err error
-	words, err = loadWords("words.txt")
+	words, err := loadWords("words.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	gameHandler := newSimpleGameHandler(words)
 
 	log.Println("Starting server on", serverAddress)
 	server := NewServer(serverAddress, gameHandler)

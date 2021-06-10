@@ -2,10 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"net/http"
 
 	"github.com/samuelrey/hangman/game"
@@ -13,7 +11,7 @@ import (
 
 type Server struct {
 	address     string
-	gameHandler *GameHandler
+	gameHandler GameHandler
 }
 
 func (s *Server) handle() http.Handler {
@@ -30,7 +28,7 @@ func (s *Server) Run() {
 func NewServer(address string, gameHandler GameHandler) *Server {
 	return &Server{
 		address:     address,
-		gameHandler: &gameHandler,
+		gameHandler: gameHandler,
 	}
 }
 
@@ -59,16 +57,15 @@ func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	game, found := gameHandler.Get(guess.ID)
+	game, found := s.gameHandler.Get(guess.ID)
 	if !found {
 		return
 	}
 
 	game.Guess(guess.Letter)
-	fmt.Printf("%+v", game)
 
 	if game.Loss() || game.Won() {
-		gameHandler.Delete(game.ID)
+		s.gameHandler.Delete(game.ID)
 	}
 
 	resp := hangmanResponse{
@@ -87,8 +84,7 @@ func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleNew(w http.ResponseWriter, r *http.Request) {
-	i := rand.Intn(len(words))
-	word := words[i]
+	word := s.gameHandler.RandWord()
 
 	game, err := game.NewGame(word, startGuesses)
 	if err != nil {
@@ -96,7 +92,7 @@ func (s *Server) handleNew(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gameHandler.Register(game)
+	s.gameHandler.Register(game)
 
 	resp := hangmanResponse{
 		ID:               game.ID,
