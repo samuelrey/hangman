@@ -11,6 +11,29 @@ import (
 	"github.com/samuelrey/hangman/game"
 )
 
+type Server struct {
+	address     string
+	gameHandler *GameHandler
+}
+
+func (s *Server) handle() http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/new", s.handleNew)
+	mux.HandleFunc("/guess", s.handleGuess)
+	return mux
+}
+
+func (s *Server) Run() {
+	http.ListenAndServe(s.address, s.handle())
+}
+
+func NewServer(address string, gameHandler GameHandler) *Server {
+	return &Server{
+		address:     address,
+		gameHandler: &gameHandler,
+	}
+}
+
 type hangmanResponse struct {
 	ID               string `json:"id"`
 	Current          string `json:"current"`
@@ -22,7 +45,7 @@ type guessRequest struct {
 	Letter string `json:"guess"`
 }
 
-func handleGuess(w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Println(err)
@@ -63,7 +86,7 @@ func handleGuess(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonResp)
 }
 
-func handleNew(w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleNew(w http.ResponseWriter, r *http.Request) {
 	i := rand.Intn(len(words))
 	word := words[i]
 

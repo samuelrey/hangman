@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"math/rand"
-	"net/http"
 	"time"
 )
 
@@ -29,9 +28,6 @@ func main() {
 	}
 
 	log.Println("Starting server on", serverAddress)
-	http.HandleFunc("/new", handleNew)
-	http.HandleFunc("/guess", handleGuess)
-	if err := http.ListenAndServe(serverAddress, nil); err != nil {
-		log.Fatal(err)
-	}
+	server := NewServer(serverAddress, gameHandler)
+	server.Run()
 }
