@@ -40,9 +40,10 @@ func NewServer(
 }
 
 type hangmanResponse struct {
-	ID               string `json:"id"`
-	Current          string `json:"current"`
-	RemainingGuesses int    `json:"guesses_remaining"`
+	ID               string  `json:"id"`
+	Answer           *string `json:"answer"`
+	Current          string  `json:"current"`
+	RemainingGuesses int     `json:"guesses_remaining"`
 }
 
 type guessRequest struct {
@@ -64,24 +65,27 @@ func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO define response for game not found.
 	game, found := (*s.gameHandler).Get(req.ID)
 	if !found {
+		http.Error(
+			w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
 
 	game.Guess(req.Guess)
 
-	// TODO define response for win/loss cases.
-	if game.Loss() || game.Won() {
-		(*s.gameHandler).Delete(game.ID)
-	}
-
 	resp := hangmanResponse{
 		ID:               game.ID,
 		Current:          game.Current,
 		RemainingGuesses: game.RemainingGuesses,
+		Answer:           nil,
 	}
+
+	if game.GameOver() {
+		resp.Answer = &game.Word
+		(*s.gameHandler).Delete(game.ID)
+	}
+
 	jsonResp, err := json.Marshal(resp)
 	if err != nil {
 		log.Println(err)

@@ -60,14 +60,8 @@ func (game *Game) Guess(letter string) {
 	}
 }
 
-// Loss will return true if the user has no more guesses and there are still
-// letters that have not been guessed.
-func (game *Game) Loss() bool {
-	return game.RemainingGuesses < 1 && len(game.IndexByLetter) > 0
-}
-
-// Won will return true if the user has guessed each of the letters within the
-// limited number of guesses provided.
-func (game *Game) Won() bool {
-	return game.RemainingGuesses >= 0 && len(game.IndexByLetter) == 0
+// GameOver will return true if the user has no more guesses or they've
+// guesesed all of the letters in the word.
+func (g *Game) GameOver() bool {
+	return g.RemainingGuesses < 1 || g.Current == g.Word
 }
