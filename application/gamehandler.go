@@ -1,8 +1,6 @@
 package application
 
 import (
-	"math/rand"
-
 	"github.com/samuelrey/hangman/game"
 )
 
@@ -13,19 +11,16 @@ type GameHandler interface {
 	Get(id string) (*game.Game, bool)
 	Register(g *game.Game)
 	Delete(id string)
-	RandWord() string
 }
 
 // SimpleGameHandler implements the GameHandler behavior using a map.
 type SimpleGameHandler struct {
 	gameMap map[string]*game.Game
-	words   []string
 }
 
-func NewSimpleGameHandler(words []string) *SimpleGameHandler {
+func NewSimpleGameHandler() *SimpleGameHandler {
 	return &SimpleGameHandler{
 		gameMap: make(map[string]*game.Game),
-		words:   words,
 	}
 }
 
@@ -40,9 +35,4 @@ func (gh *SimpleGameHandler) Register(g *game.Game) {
 
 func (gh *SimpleGameHandler) Delete(id string) {
 	delete(gh.gameMap, id)
-}
-
-func (gh *SimpleGameHandler) RandWord() string {
-	i := rand.Intn(len(gh.words))
-	return gh.words[i]
 }

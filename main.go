@@ -17,11 +17,11 @@ const (
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	var words []string
-	gameHandler := application.NewSimpleGameHandler(words)
+	wordHandler := application.NewSimpleWordHandler(wordsFile)
+	gameHandler := application.NewSimpleGameHandler()
 
 	log.Println("Starting server on", serverAddress)
 
-	server := NewServer(serverAddress, gameHandler)
+	server := NewServer(serverAddress, gameHandler, wordHandler)
 	server.Run()
 }

@@ -12,7 +12,8 @@ import (
 
 type Server struct {
 	address     string
-	gameHandler application.GameHandler
+	gameHandler *application.GameHandler
+	wordHandler *application.WordHandler
 }
 
 func (s *Server) handle() http.Handler {
@@ -26,10 +27,15 @@ func (s *Server) Run() {
 	http.ListenAndServe(s.address, s.handle())
 }
 
-func NewServer(address string, gameHandler application.GameHandler) *Server {
+func NewServer(
+	address string,
+	gameHandler application.GameHandler,
+	wordHandler application.WordHandler,
+) *Server {
 	return &Server{
 		address:     address,
-		gameHandler: gameHandler,
+		gameHandler: &gameHandler,
+		wordHandler: &wordHandler,
 	}
 }
 
@@ -40,8 +46,8 @@ type hangmanResponse struct {
 }
 
 type guessRequest struct {
-	ID     string `json:"id"`
-	Letter string `json:"guess"`
+	ID    string `json:"id"`
+	Guess string `json:"guess"`
 }
 
 func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
@@ -51,22 +57,22 @@ func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var guess guessRequest
-	err = json.Unmarshal(body, &guess)
+	var req guessRequest
+	err = json.Unmarshal(body, &req)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	game, found := s.gameHandler.Get(guess.ID)
+	game, found := (*s.gameHandler).Get(req.ID)
 	if !found {
 		return
 	}
 
-	game.Guess(guess.Letter)
+	game.Guess(req.Guess)
 
 	if game.Loss() || game.Won() {
-		s.gameHandler.Delete(game.ID)
+		(*s.gameHandler).Delete(game.ID)
 	}
 
 	resp := hangmanResponse{
@@ -85,7 +91,7 @@ func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleNew(w http.ResponseWriter, r *http.Request) {
-	word := s.gameHandler.RandWord()
+	word := (*s.wordHandler).RandWord()
 
 	game, err := game.NewGame(word, startGuesses)
 	if err != nil {
@@ -93,7 +99,7 @@ func (s *Server) handleNew(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.gameHandler.Register(game)
+	(*s.gameHandler).Register(game)
 
 	resp := hangmanResponse{
 		ID:               game.ID,
