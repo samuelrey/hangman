@@ -1,4 +1,4 @@
-package main
+package application
 
 import (
 	"bufio"
@@ -13,8 +13,8 @@ import (
 
 var wordsRegexp = regexp.MustCompile("^[A-Z]+$")
 
-// loadWords loads the word dictionary from the provided file path.
-func loadWords(path string) ([]string, error) {
+// LoadWords loads the word dictionary from the provided file path.
+func LoadWords(path string) ([]string, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, errors.Wrap(err, "open word file")

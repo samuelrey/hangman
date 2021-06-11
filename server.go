@@ -6,12 +6,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/samuelrey/hangman/application"
 	"github.com/samuelrey/hangman/game"
 )
 
 type Server struct {
 	address     string
-	gameHandler GameHandler
+	gameHandler application.GameHandler
 }
 
 func (s *Server) handle() http.Handler {
@@ -25,7 +26,7 @@ func (s *Server) Run() {
 	http.ListenAndServe(s.address, s.handle())
 }
 
-func NewServer(address string, gameHandler GameHandler) *Server {
+func NewServer(address string, gameHandler application.GameHandler) *Server {
 	return &Server{
 		address:     address,
 		gameHandler: gameHandler,

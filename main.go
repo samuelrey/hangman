@@ -4,25 +4,28 @@ import (
 	"log"
 	"math/rand"
 	"time"
+
+	"github.com/samuelrey/hangman/application"
 )
 
 const (
 	startGuesses  = 6
 	serverAddress = "localhost:1337"
+	wordsFile     = "words.txt"
 )
 
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	var err error
-	words, err := loadWords("words.txt")
+	words, err := application.LoadWords(wordsFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	gameHandler := newSimpleGameHandler(words)
+	gameHandler := application.NewSimpleGameHandler(words)
 
 	log.Println("Starting server on", serverAddress)
+
 	server := NewServer(serverAddress, gameHandler)
 	server.Run()
 }

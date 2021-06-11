@@ -1,4 +1,4 @@
-package main
+package application
 
 import (
 	"math/rand"
@@ -22,7 +22,7 @@ type SimpleGameHandler struct {
 	words   []string
 }
 
-func newSimpleGameHandler(words []string) *SimpleGameHandler {
+func NewSimpleGameHandler(words []string) *SimpleGameHandler {
 	return &SimpleGameHandler{
 		gameMap: make(map[string]*game.Game),
 		words:   words,
