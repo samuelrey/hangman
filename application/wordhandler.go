@@ -11,10 +11,12 @@ import (
 	"github.com/pkg/errors"
 )
 
+// WordHandler defines how we retrieve a random word for the game.
 type WordHandler interface {
 	RandWord() string
 }
 
+// SimpleWordHandler reads words from a file to be randomly selected from.
 type SimpleWordHandler struct {
 	words []string
 }

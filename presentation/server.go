@@ -64,6 +64,7 @@ func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO define response for game not found.
 	game, found := (*s.gameHandler).Get(req.ID)
 	if !found {
 		return
@@ -71,6 +72,7 @@ func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
 
 	game.Guess(req.Guess)
 
+	// TODO define response for win/loss cases.
 	if game.Loss() || game.Won() {
 		(*s.gameHandler).Delete(game.ID)
 	}

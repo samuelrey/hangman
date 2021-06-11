@@ -1,6 +1,10 @@
 package game
 
-import "github.com/pkg/errors"
+import (
+	"strings"
+
+	"github.com/pkg/errors"
+)
 
 type Game struct {
 	ID               string
@@ -43,6 +47,7 @@ func NewGame(word string, remainingGuesses int) (*Game, error) {
 // Note that if the user guesses a letter correctly then guesses that same
 // letter again, we consider the second guess incorrect.
 func (game *Game) Guess(letter string) {
+	letter = strings.ToUpper(letter)
 	if indexes, ok := game.IndexByLetter[letter]; ok {
 		// replace underscores with the correctly guessed letter
 		for _, i := range indexes {
