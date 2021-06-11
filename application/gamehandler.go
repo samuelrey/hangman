@@ -11,16 +11,19 @@ type GameHandler interface {
 	Get(id string) (*game.Game, bool)
 	Register(g *game.Game)
 	Delete(id string)
+	StartGuesses() int
 }
 
 // SimpleGameHandler implements the GameHandler behavior using a map.
 type SimpleGameHandler struct {
-	gameMap map[string]*game.Game
+	gameMap      map[string]*game.Game
+	startGuesses int
 }
 
-func NewSimpleGameHandler() *SimpleGameHandler {
+func NewSimpleGameHandler(startGuesses int) *SimpleGameHandler {
 	return &SimpleGameHandler{
-		gameMap: make(map[string]*game.Game),
+		gameMap:      make(map[string]*game.Game),
+		startGuesses: startGuesses,
 	}
 }
 
@@ -35,4 +38,8 @@ func (gh *SimpleGameHandler) Register(g *game.Game) {
 
 func (gh *SimpleGameHandler) Delete(id string) {
 	delete(gh.gameMap, id)
+}
+
+func (gh *SimpleGameHandler) StartGuesses() int {
+	return gh.startGuesses
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/samuelrey/hangman/application"
+	"github.com/samuelrey/hangman/presentation"
 )
 
 const (
@@ -18,10 +19,10 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	wordHandler := application.NewSimpleWordHandler(wordsFile)
-	gameHandler := application.NewSimpleGameHandler()
+	gameHandler := application.NewSimpleGameHandler(startGuesses)
 
 	log.Println("Starting server on", serverAddress)
 
-	server := NewServer(serverAddress, gameHandler, wordHandler)
+	server := presentation.NewServer(serverAddress, gameHandler, wordHandler)
 	server.Run()
 }

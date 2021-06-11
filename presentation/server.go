@@ -1,4 +1,4 @@
-package main
+package presentation
 
 import (
 	"encoding/json"
@@ -93,7 +93,7 @@ func (s *Server) handleGuess(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleNew(w http.ResponseWriter, r *http.Request) {
 	word := (*s.wordHandler).RandWord()
 
-	game, err := game.NewGame(word, startGuesses)
+	game, err := game.NewGame(word, (*s.gameHandler).StartGuesses())
 	if err != nil {
 		log.Println(err)
 		return
