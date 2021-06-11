@@ -2,6 +2,8 @@ package application
 
 import (
 	"bufio"
+	"log"
+	"math/rand"
 	"os"
 	"regexp"
 	"strings"
@@ -9,12 +11,36 @@ import (
 	"github.com/pkg/errors"
 )
 
+type WordHandler interface {
+	RandWord() string
+}
+
+type SimpleWordHandler struct {
+	words []string
+}
+
+func NewSimpleWordHandler(filepath string) *SimpleWordHandler {
+	words, err := loadWords(filepath)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return &SimpleWordHandler{
+		words: words,
+	}
+}
+
+func (wh *SimpleWordHandler) RandWord() string {
+	i := rand.Intn(len(wh.words))
+	return wh.words[i]
+}
+
 // Thanks to https://github.com/dwyl/english-words for the word list.
 
 var wordsRegexp = regexp.MustCompile("^[A-Z]+$")
 
-// LoadWords loads the word dictionary from the provided file path.
-func LoadWords(path string) ([]string, error) {
+// loadWords loads the word dictionary from the provided file path.
+func loadWords(path string) ([]string, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, errors.Wrap(err, "open word file")

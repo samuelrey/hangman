@@ -17,11 +17,7 @@ const (
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	words, err := application.LoadWords(wordsFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	var words []string
 	gameHandler := application.NewSimpleGameHandler(words)
 
 	log.Println("Starting server on", serverAddress)
