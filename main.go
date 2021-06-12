@@ -11,7 +11,7 @@ import (
 
 const (
 	startGuesses  = 6
-	serverAddress = "localhost:1337"
+	serverAddress = "0.0.0.0:14420"
 	wordsFile     = "words.txt"
 )
 
